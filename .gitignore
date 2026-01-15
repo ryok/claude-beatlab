@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Skills not part of this project
+.claude/skills/pptx/
+
+# Generated beats (output files)
+beats/
+.beatlab/
