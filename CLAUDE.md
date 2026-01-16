@@ -1,4 +1,4 @@
-# Claude Code BeatLab
+# claude-beatlab
 
 This repo turns Claude Code into a 16-step beat sequencer.
 
@@ -96,7 +96,7 @@ Kick, Snare, HiHat, Clap, OpenHat, Tom, Crash, Ride, Shaker, Cowbell
 ## Directory Structure
 
 ```
-beatlab-claude/
+claude-beatlab/
   CLAUDE.md
   pyproject.toml
   .python-version

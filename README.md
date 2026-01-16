@@ -1,4 +1,4 @@
-# AI Beats Lab
+# claude-beatlab
 
 Claude Code を 16ステップのビートシーケンサーに変える実験的プロジェクト。
 
@@ -22,7 +22,7 @@ Claude Code を 16ステップのビートシーケンサーに変える実験�
 ```bash
 # リポジトリをクローン
 git clone <repo-url>
-cd ai-beats-lab
+cd claude-beatlab
 
 # Python環境をセットアップ (uvが自動で.venvを作成)
 uv sync
@@ -102,7 +102,7 @@ ffmpeg         → .mp3 (オプション)
 ## ディレクトリ構成
 
 ```
-ai-beats-lab/
+claude-beatlab/
 ├── CLAUDE.md                 # Claude Code用プロジェクト説明
 ├── README.md
 ├── pyproject.toml
