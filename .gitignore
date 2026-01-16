@@ -12,6 +12,9 @@ wheels/
 # Skills not part of this project
 .claude/skills/pptx/
 
+# Local Claude Code settings
+.claude/settings.local.json
+
 # Generated beats (output files)
 beats/
 .beatlab/
