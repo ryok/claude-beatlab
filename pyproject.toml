@@ -1,0 +1,12 @@
+[project]
+name = "claude-beatlab"
+version = "0.1.0"
+description = "Claude Code 16-step beat sequencer"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+beatlab-validate = "scripts.validate:main"
+beatlab-grid = "scripts.render_grid:main"
+beatlab-midi = "scripts.export_midi:main"
+beatlab-wav = "scripts.render_wav:main"
