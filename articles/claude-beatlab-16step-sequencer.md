@@ -8,7 +8,9 @@ published: false
 
 ## はじめに
 
-Claude Code の拡張機能（skills / agents）を活用して、テキストプロンプトからビートを生成する 16ステップシーケンサーを作った。
+[Mastra AI Beats Lab](https://mastra.ai/blog/ai-beats-lab) に触発されて、Claude Code の拡張機能（skills / agents）で 16ステップビートシーケンサーを作った。
+
+Mastra AI Beats Lab は AI エージェントフレームワーク Mastra を使った Web ベースのビートメーカー。これを Claude Code 上で再現し、ターミナルだけでビート生成できるようにした。
 
 ```bash
 /beat "lofi, jazzy, dusty, 92bpm"
@@ -180,7 +182,7 @@ AI の出力を Python スクリプトで確実に処理:
 
 ## Beat JSON フォーマット
 
-[Mastra AI Beats Lab](https://mastra.ai/blog/ai-beats-lab) 互換の形式を採用:
+Mastra AI Beats Lab と完全互換の JSON フォーマットを採用。生成したビートを Mastra AI Beats Lab の Web UI で開いて編集・再生することも可能:
 
 ```json
 {
