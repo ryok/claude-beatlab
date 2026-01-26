@@ -101,12 +101,12 @@ claude-beatlab/
   pyproject.toml
   .python-version
   .claude/
-    commands/
-      beat.md
     agents/
       music-reference-agent.md
       music-generation-agent.md
     skills/
+      beat/
+        SKILL.md           # /beat スキル
       beatlab-contract/
         SKILL.md
       beatlab-pipeline/
