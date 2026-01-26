@@ -82,6 +82,7 @@ Claude Code の拡張システムをフル活用した構成:
 | **Skill** | パイプラインスクリプト | `.claude/skills/beatlab-pipeline/` |
 | **Agent** | スタイル解釈 (haiku) | `.claude/agents/music-reference-agent.md` |
 | **Agent** | ビート生成 (sonnet) | `.claude/agents/music-generation-agent.md` |
+| **Hook** | 生成後の自動再生 | `.claude/hooks/play-audio.sh` |
 
 ## 使い方
 
