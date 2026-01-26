@@ -8,9 +8,9 @@ published: false
 
 ## はじめに
 
-[Mastra AI Beats Lab](https://mastra.ai/blog/ai-beats-lab) に触発されて、Claude Code の拡張機能（skills / agents）で 16ステップビートシーケンサーを作った。
+Claude Code の拡張機能（skills / agents）で 16ステップビートシーケンサーを作った。
 
-Mastra AI Beats Lab は AI エージェントフレームワーク Mastra を使った Web ベースのビートメーカー。これを Claude Code 上で再現し、ターミナルだけでビート生成できるようにした。
+[Mastra AI Beats Lab](https://mastra.ai/blog/ai-beats-lab) ， AI エージェントフレームワーク Mastra を使った Web ベースのビートメーカーの仕組みをベースにこれを Claude Code 上で再現し、ターミナルだけでビート生成できるようにした。
 
 ```bash
 /beat "lofi, jazzy, dusty, 92bpm"
@@ -180,6 +180,36 @@ AI の出力を Python スクリプトで確実に処理:
 
 スクリプトは `uv run python` で実行し、環境依存を排除。
 
+### 4. Hooks による自動再生
+
+Claude Code の Hooks 機能を使って、ビート生成完了後に自動でオーディオを再生できる:
+
+```json
+// .claude/settings.json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "bash .claude/hooks/play-audio.sh" }]
+      }
+    ]
+  }
+}
+```
+
+`PostToolUse` フックは Bash コマンド実行後にトリガーされる。ffmpeg による MP3 変換完了を検知して `afplay` (macOS) で再生:
+
+```bash
+# .claude/hooks/play-audio.sh
+if [[ "$command" == *"ffmpeg"* ]] && [[ "$command" == *"beat.mp3"* ]]; then
+  mp3_path=$(echo "$command" | grep -oE 'beats/[0-9_]+/beat\.mp3')
+  afplay "$mp3_path" &  # バックグラウンド再生
+fi
+```
+
+これにより `/beat` 実行後、生成されたビートが自動的に流れる。
+
 ## Beat JSON フォーマット
 
 Mastra AI Beats Lab と完全互換の JSON フォーマットを採用。生成したビートを Mastra AI Beats Lab の Web UI で開いて編集・再生することも可能:
@@ -216,6 +246,7 @@ Claude Code の拡張システム（skills / agents）を組み合わせるこ�
 - **Skills**: ユーザー向けコマンド定義と再利用可能な知識のバンドル
 - **Agents**: 異なるモデル（haiku / sonnet）を使い分けた AI タスク実行
 - **パイプライン**: AI 出力を Python スクリプトで確実に処理
+- **Hooks**: ツール実行後のイベントをフックして自動化
 
 Claude Code は単なる AI コーディングアシスタントではなく、拡張可能なプラットフォームとして活用できる。
 
