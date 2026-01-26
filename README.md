@@ -108,12 +108,12 @@ claude-beatlab/
 ├── pyproject.toml
 ├── .python-version
 ├── .claude/
-│   ├── commands/
-│   │   └── beat.md           # /beat コマンド定義
 │   ├── agents/
 │   │   ├── music-reference-agent.md
 │   │   └── music-generation-agent.md
 │   └── skills/
+│       ├── beat/
+│       │   └── SKILL.md      # /beat スキル定義
 │       ├── beatlab-contract/
 │       │   └── SKILL.md      # JSON契約定義
 │       └── beatlab-pipeline/
