@@ -8,7 +8,7 @@ published: false
 
 ## はじめに
 
-Claude Code の拡張機能（commands / agents / skills）を活用して、テキストプロンプトからビートを生成する 16ステップシーケンサーを作った。
+Claude Code の拡張機能（skills / agents）を活用して、テキストプロンプトからビートを生成する 16ステップシーケンサーを作った。
 
 ```bash
 /beat "lofi, jazzy, dusty, 92bpm"
@@ -20,22 +20,27 @@ Claude Code の拡張機能（commands / agents / skills）を活用して、テ
 
 ### デモ
 
+「眠くなるビート」を生成した例:
+
 ```
+BPM: 68  Swing: 0.15
+
             | 0| 1| 2| 3| 4| 5| 6| 7| 8| 9|10|11|12|13|14|15|
 ------------+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 Kick        | X|  |  |  |  |  |  |  | X|  |  |  |  |  |  |  |
-Snare       |  |  |  |  | X|  |  |  |  |  |  |  | X|  |  |  |
-HiHat       | X|  | X|  | X|  | X|  | X|  | X|  | X|  | X|  |
+Snare       |  |  |  |  |  |  |  |  |  |  |  |  | X|  |  |  |
+HiHat       |  |  |  |  |  |  | X|  |  |  |  |  |  |  | X|  |
 ------------+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-C5          | O|  |  |  |  |  |  |  | O|  |  |  |  |  |  |  |
-G4          |  |  |  |  | O|  |  |  |  |  |  |  | O|  |  |  |
+C4          | O|  |  |  |  |  |  |  | O|  |  |  |  |  |  |  |
+B3          |  |  |  |  | O|  |  |  |  |  |  |  |  |  |  |  |
+A3          |  |  |  |  |  |  |  |  |  |  |  |  | O|  |  |  |
 ------------+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 Beat        |1 |  |  |  |2 |  |  |  |3 |  |  |  |4 |  |  |  |
 ```
 
 ### 主な機能
 
-- **テキストからビート生成**: 「lofi, jazzy」のようなスタイルプロンプトでビート生成
+- **テキストからビート生成**: 「lofi, jazzy」「眠くなる」のようなスタイルプロンプトでビート生成
 - **マルチフォーマット出力**: JSON / MIDI / WAV / MP3
 - **ASCIIグリッド表示**: ターミナルで視覚的に確認
 - **DAW連携**: MIDI 出力で任意の DAW にインポート可能
@@ -66,12 +71,15 @@ Claude Code の拡張システムをフル活用した構成:
 └─────────────────────────────────┘
 ```
 
-### 2層の拡張機能
+### 拡張機能の構成
 
 | 種類 | 役割 | ファイル |
 |------|------|----------|
-| **Skill** | ユーザー向けコマンド・再利用可能な知識 | `.claude/skills/beat/SKILL.md` |
-| **Agent** | AI によるタスク実行 | `.claude/agents/*.md` |
+| **Skill** | ユーザー向けコマンド `/beat` | `.claude/skills/beat/SKILL.md` |
+| **Skill** | JSON契約定義 | `.claude/skills/beatlab-contract/SKILL.md` |
+| **Skill** | パイプラインスクリプト | `.claude/skills/beatlab-pipeline/` |
+| **Agent** | スタイル解釈 (haiku) | `.claude/agents/music-reference-agent.md` |
+| **Agent** | ビート生成 (sonnet) | `.claude/agents/music-generation-agent.md` |
 
 ## 使い方
 
@@ -90,12 +98,16 @@ claude  # Claude Code を起動
 
 # スタイルプロンプトでビート生成
 /beat "lofi, jazzy, dusty, 92bpm, minimal melody"
+
+# 日本語でも OK
+/beat "眠くなるビート"
+/beat "激しいビート"
 ```
 
 ### 出力ファイル
 
 ```
-beats/20260116_153520/
+beats/20260127_043543/
 ├── beat.json   # ビートデータ
 ├── beat.mid    # MIDI (DAW用)
 ├── beat.wav    # オーディオ
@@ -111,18 +123,21 @@ beats/20260116_153520/
 ```yaml
 # music-reference-agent (haiku) - 軽量・高速
 # スタイル解釈に特化
-bpm: 92
-swing: 0.12
-drum_plan: "Kick on 0, 8; Snare on 4, 12"
-melody_plan: "Minimal 2-note motif"
+bpm: 68
+swing: 0.15
+drum_plan: "Kick on 0, 8; soft snare on 12"
+melody_plan: "Single repeating motif (C4, B3)"
+density: low
 ```
 
 ```json
 // music-generation-agent (sonnet) - 高精度
 // 実際のビートデータ生成
 {
-  "bpm": 92,
-  "drumSequence": { "Kick": [0, 8], "Snare": [4, 12] }
+  "bpm": 68,
+  "swing": 0.15,
+  "drumSequence": { "Kick": [0, 8], "Snare": [12] },
+  "pianoSequence": { "C4": [0, 8], "B3": [4] }
 }
 ```
 
@@ -169,16 +184,17 @@ AI の出力を Python スクリプトで確実に処理:
 
 ```json
 {
-  "bpm": 92,
-  "swing": 0.12,
+  "bpm": 68,
+  "swing": 0.15,
   "pianoSequence": {
-    "C5": [0, 8],
-    "G4": [4, 12]
+    "C4": [0, 8],
+    "B3": [4],
+    "A3": [12]
   },
   "drumSequence": {
     "Kick": [0, 8],
-    "Snare": [4, 12],
-    "HiHat": [0, 2, 4, 6, 8, 10, 12, 14]
+    "Snare": [12],
+    "HiHat": [6, 14]
   }
 }
 ```
@@ -192,12 +208,12 @@ AI の出力を Python スクリプトで確実に処理:
 
 ## まとめ
 
-Claude Code の拡張システム（commands / agents / skills）を組み合わせることで、テキストベースのビートシーケンサーを実現できた。
+Claude Code の拡張システム（skills / agents）を組み合わせることで、テキストベースのビートシーケンサーを実現できた。
 
 特に学んだこと:
-- **Commands**: ユーザー向けのインターフェース定義
-- **Agents**: 異なるモデルを使い分けた AI タスク実行
-- **Skills**: 再利用可能な知識とスクリプトのバンドル
+- **Skills**: ユーザー向けコマンド定義と再利用可能な知識のバンドル
+- **Agents**: 異なるモデル（haiku / sonnet）を使い分けた AI タスク実行
+- **パイプライン**: AI 出力を Python スクリプトで確実に処理
 
 Claude Code は単なる AI コーディングアシスタントではなく、拡張可能なプラットフォームとして活用できる。
 
